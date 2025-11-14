@@ -8,6 +8,11 @@ framework:
     #esi: true
     #fragments: true
 
+    http_client:
+        scoped_clients:
+            book.client:
+                base_uri: 'https://api.itbook.store'
+
 when@test:
     framework:
         test: true
