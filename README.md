@@ -2,6 +2,20 @@
 
 This project is an example to mock http client responses.
 
+### Test it
+
+*with real API*
+```shell
+symfony console app:book-client
+symfony console app:book-client /books/9781804617007
+```
+
+*with Mocks*
+```shell
+symfony console --env=test app:book-client
+symfony console --env=test app:book-client /books/9781484206485
+```
+
 ### Example
 
 *Get new books*
