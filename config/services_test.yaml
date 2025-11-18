@@ -1,0 +1,20 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Mock\:
+        resource: '../src/Mock'
+
+    App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface:
+        alias: App\Mock\Symfony\HttpClient\ResponseFactory\NotImplementedMockResponseFactory
+
+    app.symfony.mock.client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        arguments:
+            - '@App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface'
+
+    # Replace book client with the mock one
+    book.client:
+        alias: app.symfony.mock.client
+

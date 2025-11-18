@@ -2,7 +2,7 @@
 
 namespace App\Mock\ResponseFactory;
 
-use App\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;
+use App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpClient\Response\MockResponse;

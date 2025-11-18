@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Symfony;
 
-use App\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;
-use App\Symfony\HttpClient\ResponseFactory\NotImplementedMockResponseFactory;
+use App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;
+use App\Mock\Symfony\HttpClient\ResponseFactory\NotImplementedMockResponseFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 

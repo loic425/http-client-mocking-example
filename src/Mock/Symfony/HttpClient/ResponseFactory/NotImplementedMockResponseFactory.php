@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Symfony\HttpClient\ResponseFactory;
+namespace App\Mock\Symfony\HttpClient\ResponseFactory;
 
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Contracts\HttpClient\ResponseInterface;

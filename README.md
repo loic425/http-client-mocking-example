@@ -5,16 +5,13 @@ This project is an example to mock http client responses.
 ### Example
 
 *Get new books*
+
 ```php
 <?php
 
 namespace App\Mock\ResponseFactory;
 
-use App\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;
-use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpClient\Response\MockResponse;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;use Symfony\Component\DependencyInjection\Attribute\AsDecorator;use Symfony\Component\DependencyInjection\Attribute\Autowire;use Symfony\Component\HttpClient\Response\MockResponse;use Symfony\Contracts\HttpClient\ResponseInterface;
 
 #[AsDecorator(MockResponseFactoryInterface::class)]
 final class GetBookCollectionResponseFactory implements MockResponseFactoryInterface
@@ -40,12 +37,13 @@ final class GetBookCollectionResponseFactory implements MockResponseFactoryInter
 ```
 
 *Get specific book*
+
 ```php
 <?php
 
 namespace App\Mock\ResponseFactory;
 
-use App\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;
+use App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -81,3 +79,30 @@ final class GetBookItemResponseFactory implements MockResponseFactoryInterface
     }
 }
 ```
+
+To configure the mock services:
+
+```yaml
+# services_test.yaml
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Mock\:
+        resource: '../src/Mock'
+
+    App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface:
+        alias: App\Mock\Symfony\HttpClient\ResponseFactory\NotImplementedMockResponseFactory
+
+    app.symfony.mock.client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        arguments:
+            - '@App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface'
+
+    # Replace book client with the mock one
+    book.client:
+        alias: app.symfony.mock.client
+```
+
+Of course, you will need to configure these services for non-production envs only.

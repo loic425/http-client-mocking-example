@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Symfony\HttpClient\ResponseFactory;
+namespace App\Mock\Symfony\HttpClient\ResponseFactory;
 
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
