@@ -2,9 +2,11 @@
 
 namespace App\Mock\Symfony\HttpClient\ResponseFactory;
 
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+#[AsAlias(MockResponseFactoryInterface::class)]
 final class NotImplementedMockResponseFactory implements MockResponseFactoryInterface
 {
     private const int HTTP_NOT_IMPLEMENTED = 501;

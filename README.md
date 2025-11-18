@@ -25,7 +25,11 @@ symfony console --env=test app:book-client /books/9781484206485
 
 namespace App\Mock\ResponseFactory;
 
-use App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;use Symfony\Component\DependencyInjection\Attribute\AsDecorator;use Symfony\Component\DependencyInjection\Attribute\Autowire;use Symfony\Component\HttpClient\Response\MockResponse;use Symfony\Contracts\HttpClient\ResponseInterface;
+use App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 #[AsDecorator(MockResponseFactoryInterface::class)]
 final class GetBookCollectionResponseFactory implements MockResponseFactoryInterface
@@ -97,26 +101,21 @@ final class GetBookItemResponseFactory implements MockResponseFactoryInterface
 To configure the mock services:
 
 ```yaml
-# services_test.yaml
+# services.yaml
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-
-    App\Mock\:
-        resource: '../src/Mock'
-
-    App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface:
-        alias: App\Mock\Symfony\HttpClient\ResponseFactory\NotImplementedMockResponseFactory
-
-    app.symfony.mock.client:
+    # ...
+    app.symfony.mock_http_client.book:
         class: Symfony\Component\HttpClient\MockHttpClient
         arguments:
             - '@App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface'
-
-    # Replace book client with the mock one
-    book.client:
-        alias: app.symfony.mock.client
 ```
 
-Of course, you will need to configure these services for non-production envs only.
+```yaml
+# services_test.yaml
+services:
+    # Replace book client with the mock one
+    book.client:
+        alias: app.symfony.mock_http_client.book
+```
+
+Of course, you will need to create this alias for non-production envs only.
