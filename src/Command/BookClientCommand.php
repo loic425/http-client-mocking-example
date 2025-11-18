@@ -27,7 +27,7 @@ final class BookClientCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument(name: 'path', mode: InputArgument::OPTIONAL, description: 'Path', default: '/')
+            ->addArgument(name: 'path', mode: InputArgument::OPTIONAL, description: 'Path', default: '/new')
         ;
     }
 
@@ -36,7 +36,7 @@ final class BookClientCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $dump = new Dumper($output);
 
-        $response = $this->bookClient->request('GET', '/1.0/'.$input->getArgument('path'));
+        $response = $this->bookClient->request('GET', '/1.0'.$input->getArgument('path'));
 
         $io->write($dump($response->toArray()));
 
