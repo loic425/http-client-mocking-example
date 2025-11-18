@@ -98,24 +98,17 @@ final class GetBookItemResponseFactory implements MockResponseFactoryInterface
 }
 ```
 
-To configure the mock services:
-
-```yaml
-# services.yaml
-services:
-    # ...
-    app.symfony.mock_http_client.book:
-        class: Symfony\Component\HttpClient\MockHttpClient
-        arguments:
-            - '@App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface'
-```
+To use the mock client in the API:
 
 ```yaml
 # services_test.yaml
 services:
     # Replace book client with the mock one
-    book.client:
-        alias: app.symfony.mock_http_client.book
+    app.symfony.mock_http_client.book:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        decorates: book.client
+        arguments:
+            - '@App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface'
 ```
 
-Of course, you will need to create this alias for non-production envs only.
+Of course, you will need to create this decoration for non-production envs only.

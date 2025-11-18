@@ -1,5 +1,7 @@
 services:
     # Replace book client with the mock one
-    book.client:
-        alias: app.symfony.mock_http_client.book
-
+    app.symfony.mock_http_client.book:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        decorates: book.client
+        arguments:
+            - '@App\Mock\Symfony\HttpClient\ResponseFactory\MockResponseFactoryInterface'
