@@ -1,8 +1,32 @@
-## Symfony Http Client Mocking
+## Symfony Http Client Mocking Example
 
-This project is an example to mock http client responses.
+This repository is a **small example project** demonstrating how to mock Symfony’s `HttpClient` using `MockHttpClient` and `MockResponse`.
 
-### Test it
+The goal is to showcase a simple and structured approach to:
+
+- Testing code that depends on an external API
+- Simulating different HTTP responses
+- Organizing mocks cleanly using response factories
+
+## 🎯 Why This Repository Exists
+
+When working with Symfony’s `HttpClient`, you often need to:
+
+- Test without calling a real external API
+- Simulate HTTP errors
+- Precisely control the returned responses
+
+This project demonstrates a clean way to achieve that.
+
+## 🚀 Installation
+
+```bash
+git clone https://github.com/loic425/http-client-mocking-example.git
+cd http-client-mocking-example
+composer install
+```
+
+## ▶️ Test it
 
 *with real API*
 ```shell
@@ -16,7 +40,7 @@ symfony console --env=test app:book-client
 symfony console --env=test app:book-client /books/9781484206485
 ```
 
-### Example
+## 🕮 Example
 
 *Get new books*
 
@@ -112,3 +136,60 @@ services:
 ```
 
 Of course, you will need to create this decoration for non-production envs only.
+
+## ⚙️ How does it work?
+
+
+### Create the MockResponseFactoryInterface
+
+The interface is very simple.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Mock\Symfony\HttpClient\ResponseFactory;
+
+use Symfony\Contracts\HttpClient\ResponseInterface;
+
+interface MockResponseFactoryInterface
+{
+    public function __invoke(string $method, string $url, array $options): ResponseInterface;
+}
+```
+
+it's very close to the `Symfony\Contracts\HttpClient\HttpClientInterface` request method.
+
+The first argument of the MockHttpClient is the response factory, and it accepts a callable.
+So we just need to create an object which implements our interface to create this callable.
+
+### Create the first implementation for the fallback
+
+We alias the interface on the Symfony dependency injection system with our first Mock.
+
+```php
+<?php
+
+namespace App\Mock\Symfony\HttpClient\ResponseFactory;
+
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
+use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Contracts\HttpClient\ResponseInterface;
+
+#[AsAlias(MockResponseFactoryInterface::class)]
+final class NotImplementedMockResponseFactory implements MockResponseFactoryInterface
+{
+    private const int HTTP_NOT_IMPLEMENTED = 501;
+
+    public function __invoke(string $method, string $url, array $options): ResponseInterface
+    {
+        return new MockResponse(body: sprintf('No Mock was found for path "%s" "%s".', $url, $method), info: [
+            'http_code' => self::HTTP_NOT_IMPLEMENTED,
+        ]);
+    }
+}
+```
+
+And then we'll be able to decorate the interface using the `AsDecorator` attribute from Symfony.
+We are now able to implement our custom logic in each decorator using filesystem, or whatever.
